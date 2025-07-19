@@ -7,16 +7,6 @@ import requests
 
 
 def top_ten(subreddit):
-    """
-    Prints the titles of the first 10 hot posts listed for a given subreddit.
-
-    Args:
-        subreddit (str): The name of the subreddit to query.
-
-    Note:
-        If the subreddit is invalid, prints None.
-        Does not follow redirects as invalid subreddits may redirect to search.
-    """
     if not subreddit or not isinstance(subreddit, str):
         print(None)
         return
