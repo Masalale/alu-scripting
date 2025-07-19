@@ -7,19 +7,6 @@ number of subscribers for a given subreddit.
 import requests
 
 def number_of_subscribers(subreddit):
-    """Query the Reddit API and return the number of subscribers for a subreddit.
-
-    Args:
-        subreddit (str): The name of the subreddit to query.
-
-    Returns:
-        int: The number of subscribers for the subreddit.
-             Returns 0 if the subreddit is invalid or if there's an error.
-
-    Note:
-        This function does not follow redirects, as invalid subreddits may
-        redirect to search results.
-    """
     if not subreddit or not isinstance(subreddit, str):
         return 0
 
