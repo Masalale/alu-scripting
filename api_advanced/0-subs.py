@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Get the number of subscribers for a given subreddit.
+"""
+    Get the number of subscribers for a given subreddit.
 
     Returns:
         int: The number of subscribers for the subreddit, or 0 if not found.    
