@@ -6,17 +6,7 @@ number of subscribers for a given subreddit.
 
 import requests
 
-
 def number_of_subscribers(subreddit):
-    """
-    Returns the number of subscribers for a given subreddit.
-
-    Args:
-        subreddit (str): The name of the subreddit.
-
-    Returns:
-        int: The number of subscribers, or 0 if the subreddit is invalid.
-    """
     if not subreddit or not isinstance(subreddit, str):
         return 0
 
