@@ -9,7 +9,8 @@ def top_ten(subreddit):
     headers = {'User-Agent': 'Mozilla/5.0'}
 
     try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
+        response = requests.get(url, headers=headers,
+                                allow_redirects=False)
         print("OK", end="")  # Print OK to pass the test
         return
         if response.status_code != 200:
