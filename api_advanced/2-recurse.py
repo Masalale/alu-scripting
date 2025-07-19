@@ -6,7 +6,7 @@ a list of all hot article titles for a given subreddit.
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
+def recurse(subreddit, hot_list=None, after=None):
     """
     Recursively queries the Reddit API and returns a list of titles of all hot
     articles for a given subreddit.
@@ -20,12 +20,14 @@ def recurse(subreddit, hot_list=[], after=None):
         list: A list of titles of all hot articles.
               Returns None if the subreddit is invalid or an error occurs.
     """
+    if hot_list is None:
+        hot_list = []
     # Construct the URL for the API request
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     # Set a custom User-Agent to avoid "Too Many Requests" errors
-    headers = {'User-Agent': 'python:alu-scripting:v1.0 (by /u/Masalale)'}
+    headers = {"User-Agent": "python:alu-scripting:v1.0 (by /u/Masalale)"}
     # Parameters for the request, including pagination token
-    params = {'after': after}
+    params = {"after": after}
 
     try:
         # Make the API request, preventing redirects for invalid subreddits
@@ -40,12 +42,12 @@ def recurse(subreddit, hot_list=[], after=None):
         # Parse the JSON response
         data = response.json()
         # Extract the list of posts and the 'after' token for the next page
-        posts = data.get('data', {}).get('children', [])
-        after = data.get('data', {}).get('after')
+        posts = data.get("data", {}).get("children", [])
+        after = data.get("data", {}).get("after")
 
         # Add the titles of the posts to the hot_list
         for post in posts:
-            hot_list.append(post.get('data', {}).get('title'))
+            hot_list.append(post.get("data", {}).get("title"))
 
         # If there is a next page, make a recursive call
         if after:

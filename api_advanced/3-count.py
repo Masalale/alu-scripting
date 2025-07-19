@@ -38,8 +38,8 @@ def count_words(subreddit, word_list, after=None, counts=None):
     # API endpoint for hot posts
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     # Custom User-Agent to avoid Too Many Requests errors
-    headers = {'User-Agent': 'python:alu-scripting:v1.0 (by /u/Masalale)'}
-    params = {'after': after, 'limit': 100}
+    headers = {"User-Agent": "python:alu-scripting:v1.0 (by /u/Masalale)"}
+    params = {"after": after, "limit": 100}
 
     try:
         # Make the API request, preventing redirects for invalid subreddits
@@ -50,13 +50,13 @@ def count_words(subreddit, word_list, after=None, counts=None):
         if response.status_code != 200:
             return  # Invalid subreddit or error, print nothing
 
-        data = response.json().get('data', {})
-        posts = data.get('children', [])
-        after = data.get('after')
+        data = response.json().get("data", {})
+        posts = data.get("children", [])
+        after = data.get("after")
 
         # Process titles
         for post in posts:
-            title = post.get('data', {}).get('title', '').lower()
+            title = post.get("data", {}).get("title", "").lower()
             for word in title.split():
                 if word in counts:
                     counts[word] += 1
