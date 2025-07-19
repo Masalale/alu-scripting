@@ -1,81 +1,53 @@
 #!/usr/bin/python3
-"""
-This module contains a recursive function that queries the Reddit API,
-parses the titles of all hot articles, and prints a sorted count of
-given keywords.
-"""
+""" 3-count.py """
+import json
 import requests
 
 
-def count_words(subreddit, word_list, after=None, counts=None):
-    """
-    Recursively queries the Reddit API, parses the titles of all hot articles,
-    and prints a sorted count of given keywords.
+def count_words(subreddit, word_list, after="", count=[]):
+    """ keywords """
 
-    Args:
-        subreddit (str): The name of the subreddit to query.
-        word_list (list): A list of keywords to count.
-        after (str, optional): The 'after' token for pagination.
-                               Defaults to None.
-        counts (dict, optional): A dictionary to store keyword counts.
-                                 Defaults to None.
-    """
-    if counts is None:
-        # Initialize counts dictionary from word_list, handling case-insensitivity
-        # and duplicates by summing them up.
-        counts = {}
-        for word in word_list:
-            lower_word = word.lower()
-            counts[lower_word] = counts.get(lower_word, 0) + 1
+    if after == "":
+        count = [0] * len(word_list)
 
-        # For the final print, we need the counts of individual keywords,
-        # so we reset the values to 0 after getting the unique keywords.
-        # The initial aggregation was just to handle duplicates in word_list.
-        # A better way is to just get unique words.
-        final_counts = {word: 0 for word in counts.keys()}
-        return count_words(subreddit, word_list, after, final_counts)
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    request = requests.get(url,
+                           params={'after': after},
+                           allow_redirects=False,
+                           headers={'User-Agent': 'Mozilla/5.0'})
 
-    # API endpoint for hot posts
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    # Custom User-Agent to avoid Too Many Requests errors
-    headers = {"User-Agent": "python:alu-scripting:v1.0 (by /u/Masalale)"}
-    params = {"after": after, "limit": 100}
+    if request.status_code == 200:
+        data = request.json()
 
-    try:
-        # Make the API request, preventing redirects for invalid subreddits
-        response = requests.get(
-            url, headers=headers, params=params, allow_redirects=False
-        )
+        for topic in (data['data']['children']):
+            for word in topic['data']['title'].split():
+                for i in range(len(word_list)):
+                    if word_list[i].lower() == word.lower():
+                        count[i] += 1
 
-        if response.status_code != 200:
-            return  # Invalid subreddit or error, print nothing
+        after = data['data']['after']
+        if after is None:
+            save = []
+            for i in range(len(word_list)):
+                for j in range(i + 1, len(word_list)):
+                    if word_list[i].lower() == word_list[j].lower():
+                        save.append(j)
+                        count[i] += count[j]
 
-        data = response.json().get("data", {})
-        posts = data.get("children", [])
-        after = data.get("after")
+            for i in range(len(word_list)):
+                for j in range(i, len(word_list)):
+                    if (count[j] > count[i] or
+                            (word_list[i] > word_list[j] and
+                             count[j] == count[i])):
+                        aux = count[i]
+                        count[i] = count[j]
+                        count[j] = aux
+                        aux = word_list[i]
+                        word_list[i] = word_list[j]
+                        word_list[j] = aux
 
-        # Process titles
-        for post in posts:
-            title = post.get("data", {}).get("title", "").lower()
-            for word in title.split():
-                if word in counts:
-                    counts[word] += 1
-
-        if after:
-            # Recursive call for the next page
-            count_words(subreddit, word_list, after, counts)
+            for i in range(len(word_list)):
+                if (count[i] > 0) and i not in save:
+                    print("{}: {}".format(word_list[i].lower(), count[i]))
         else:
-            # Base case: last page reached, print results
-            # Filter out words with zero count
-            filtered_counts = {k: v for k, v in counts.items() if v > 0}
-
-            # Sort by count (desc) and then alphabetically (asc)
-            sorted_items = sorted(
-                filtered_counts.items(), key=lambda item: (-item[1], item[0])
-            )
-
-            for word, count in sorted_items:
-                print(f"{word}: {count}")
-
-    except requests.RequestException:
-        return  # Network error, print nothing
+            count_words(subreddit, word_list, after, count)
