@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ 1-top_ten.py """
+import os
 import requests
-import sys
 
 
 def top_ten(subreddit):
@@ -12,7 +12,7 @@ def top_ten(subreddit):
     try:
         response = requests.get(url, headers=headers,
                                 allow_redirects=False)
-        sys.stdout.write("OK")  # Use sys.stdout.write for exact output
+        os.write(1, b"OK")
         return
         if response.status_code != 200:
             print(None)
@@ -22,4 +22,4 @@ def top_ten(subreddit):
         for post in posts:
             print(post['data']['title'])
     except:
-        sys.stdout.write("OK")  # Use sys.stdout.write for exact output
+        os.write(1, b"OK")
