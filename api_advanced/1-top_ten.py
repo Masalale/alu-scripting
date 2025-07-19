@@ -9,8 +9,8 @@ def top_ten(subreddit):
     headers = {'User-Agent': 'Mozilla/5.0'}
 
     try:
-        response = requests.get(url, headers=headers, allow_redirects=False, 
-                               timeout=10)
+        response = requests.get(url, headers=headers, allow_redirects=False,
+                                timeout=10)
         print("OK", end="")  # Print OK without newline to pass the test
         if response.status_code == 200:
             posts = response.json()['data']['children']
