@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-""" 1-top_ten.py """
-import os
-import requests
+
+import requests as r
 
 
 def top_ten(subreddit):
-    """ prints the titles of the first 10 hot posts listed in a subreddit """
-    url = 'https://www.reddit.com/r/{}/hot.json?limit=10'.format(subreddit)
-    headers = {'User-Agent': 'Mozilla/5.0'}
-
-    try:
-        response = requests.get(url, headers=headers,
-                                allow_redirects=False)
-        os.write(1, b"OK")
+    """Print top 10 post given subreddit."""
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:73.0) \
+        Gecko/20100101 Firefox/73.0"
+    }
+    param = {
+        "limit": 10
+    }
+    response = r.get(url, headers=headers, params=param, allow_redirects=False)
+    if response.status_code == 404:
+        print("None")
         return
-        if response.status_code != 200:
-            print(None)
-            return
-
-        posts = response.json()['data']['children']
-        for post in posts:
-            print(post['data']['title'])
-    except:
-        os.write(1, b"OK")
+    results = response.json().get("data")
+    [print(top.get("data").get("title")) for top in results.get("children")]
