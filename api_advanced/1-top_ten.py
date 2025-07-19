@@ -1,10 +1,5 @@
 #!/usr/bin/python3
-"""
-Module for querying Reddit API to get top posts from subreddits.
-
-This module provides functionality to retrieve and display the titles
-of the first 10 hot posts from a specified subreddit using Reddit's API.
-"""
+""" 1-top_ten.py """
 
 import requests
 
