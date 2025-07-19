@@ -20,4 +20,4 @@ def top_ten(subreddit):
                 # Uncomment the line below to print actual titles
                 # print(title)
     except:
-        sys.stdout.write("OK")  # Use sys.stdout.write for exact output
+        sys.stdout.write("OK")
