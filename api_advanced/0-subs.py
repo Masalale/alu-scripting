@@ -19,21 +19,18 @@ def number_of_subscribers(subreddit):
     Returns:
         int: Number of subscribers, or 0 if subreddit is invalid
     """
-    if not subreddit or not isinstance(subreddit, str):
+    if subreddit is None or not isinstance(subreddit, str):
         return 0
 
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
-    headers = {
-        'User-Agent': 'python:subreddit.subscriber.counter:v1.0 (by /u/temp_user)'
-    }
+    url = f'https://www.reddit.com/r/{subreddit}/about.json'
+    headers = {'User-Agent': 'Google Chrome Version 126.0.6478.127'}
 
     try:
         response = requests.get(url, headers=headers, allow_redirects=False)
-
         if response.status_code == 200:
             data = response.json()
-            return data['data']['subscribers']
+            return data.get('data', {}).get('subscribers', 0)
         else:
             return 0
-    except (requests.RequestException, KeyError, ValueError):
+    except requests.RequestException:
         return 0
