@@ -18,4 +18,4 @@ def top_ten(subreddit):
         for title_ in titles_:
             print(title_.get('data').get('title'))
     else:
-        print(None)
+        pass
