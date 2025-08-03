@@ -11,21 +11,23 @@ def top_ten(subreddit):
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     headers = {
         "User-Agent": "linux:0x016.project:v1.0.0 (by /u/ecalvoc)"
-        }
-    params = {"limit": 10}
+    }
+    params = {
+        "limit": 10
+    }
     try:
         response = requests.get(url,
                                 headers=headers,
                                 params=params,
                                 allow_redirects=False)
-        if response.status_code != 200:
-            print("None")
-            return
-        top_data = response.json().get("data")
-        if top_data:
-            childrens = top_data.get("children")
-            [print(children.get("data").get("title")) for children in childrens]
-            return
-        print("None")
-    except:
-        print("None")
+        if response.status_code == 200:
+            results = response.json().get("data")
+            if results:
+                children = results.get("children")
+                if children:
+                    for child in children:
+                        print(child.get("data").get("title"))
+                    return
+    except requests.exceptions.RequestException:
+        pass
+    print("None")
