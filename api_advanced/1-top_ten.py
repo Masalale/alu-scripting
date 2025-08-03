@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-"""
-This module provides a function to fetch and print the top 10 hot posts
-from a given subreddit using the Reddit API.
-"""
+"""Define top_ten function"""
 import requests
 
 def top_ten(subreddit):
+    """
+        Query the Reddit API and prints the titles of the first 10 hot posts
+        listed for a given subreddit.
+    """
     if not subreddit or not isinstance(subreddit, str):
         print(None)
         return
