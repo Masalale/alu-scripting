@@ -13,12 +13,19 @@ def top_ten(subreddit):
         "User-Agent": "linux:0x016.project:v1.0.0 (by /u/ecalvoc)"
         }
     params = {"limit": 10}
-    top_data = requests.get(url,
-                            headers=headers,
-                            params=params,
-                            allow_redirects=False).json().get("data")
-    if top_data:
-        childrens = top_data.get("children")
-        [print(children.get("data").get("title")) for children in childrens]
-        return
-    print("None")
+    try:
+        response = requests.get(url,
+                                headers=headers,
+                                params=params,
+                                allow_redirects=False)
+        if response.status_code != 200:
+            print("None")
+            return
+        top_data = response.json().get("data")
+        if top_data:
+            childrens = top_data.get("children")
+            [print(children.get("data").get("title")) for children in childrens]
+            return
+        print("None")
+    except:
+        print("None")
