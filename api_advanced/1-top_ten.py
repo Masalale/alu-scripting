@@ -3,10 +3,6 @@
 import requests
 
 def top_ten(subreddit):
-    """
-    Prints the titles of the first 10 hot posts for a given subreddit.
-    If the subreddit is invalid, prints None.
-    """
     if not subreddit or not isinstance(subreddit, str):
         print(None)
         return
